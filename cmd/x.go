@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/laracro/x/internal/client"
 	"github.com/laracro/x/internal/engine"
+	"log"
 	"os"
 )
 
@@ -12,16 +14,23 @@ var (
 )
 
 func main() {
-
 	x := engine.LoadEngine()
 
 	if len(os.Args) < 2 {
 		x.FetchAll()
-		return
 	}
-
 	command = os.Args[1]
-	options = os.Args[2:]
-
-	fmt.Printf("command{%s} | options{%s}\n", command, options)
+	switch command {
+	case "web":
+		fmt.Printf("command -> %s\n",command)
+		break
+	case "conn":
+		options = os.Args[2:]
+		x.GetInstance(options[0])
+		c := client.NewClient(x.Instance)
+		c.Login()
+		break
+	default:
+		log.Fatal("unknown command")
+	}
 }
